@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Invaders — Dark Space</title>
+    <link rel="icon" type="image/png" href="ASSETS/ACSSGAMELOGO.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!--
+<script>
+    window.location.href = "loading.html";
+</script>
+-->
+    <div class="game-container">
+        <!-- Game Header -->
+        <header class="game-header">
+            <div class="logo">
+                <span class="alien-icon">👾</span>
+                <h1>ACSS | Space Invaders — Dark Space</h1>
+                <img src="ASSETS/LOGO-NO-BG.png" alt="Game Logo" style="width:48px; height:48px; margin-left:12px; vertical-align:middle;">
+            </div>
+            <div class="game-controls">
+                <button id="startBtn" class="control-btn">Start</button>
+                <button id="pauseBtn" class="control-btn">Pause</button>
+                <button id="fullscreenBtn" class="control-btn">Full Screen</button>
+            </div>
+        </header>
+
+        <!-- Main Game Area -->
+        <main class="main-content">
+            <div class="game-area">
+                <canvas id="gameCanvas"></canvas>
+                
+                <!-- Game Overlay -->
+                <div id="gameOverlay" class="game-overlay">
+                    <div class="start-screen">
+                        <h2>Space Invaders</h2>
+                        <p>Defend Earth from alien invasion!</p>
+                        <button id="startGameBtn" class="start-btn">Start Game</button>
+                    </div>
+                </div>
+
+                <!-- Game UI Elements -->
+                <div class="game-ui">
+                    <div class="score-display">
+                        <span>Score: <span id="scoreValue">0</span></span>
+                    </div>
+                    <div class="lives-display">
+                        <span>Lives: <span id="livesValue">3</span></span>
+                    </div>
+                    <div class="level-display">
+                        <span>Level: <span id="levelValue">1</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Side Panel -->
+            <aside class="side-panel">
+                <section class="instructions-section">
+                    <h3>How to Play</h3>
+                    <ul class="control-list">
+                        <li><span style="font-size:1.2em;"><kbd>🖱️</kbd></span> Move mouse to control ship</li>
+                        <li><span style="font-size:1.2em;"><kbd>🖱️</kbd></span> Right click to shoot</li>
+                        <li><kbd>Space</kbd> to shoot</li>
+                        <li><kbd>P</kbd> to pause/resume</li>
+                        <li><kbd>F</kbd> to toggle fullscreen</li>
+                        <li><kbd>Enter</kbd> to start / restart</li>
+                    </ul>
+                </section>
+
+                <section class="game-instructions">
+                    <h3>Instructions</h3>
+                    <ol class="instruction-list">
+                        <li>Click <strong>Start</strong> or press <kbd>Enter</kbd></li>
+                        <li>Destroy invaders before they reach the ground</li>
+                        <li>Pick up power-ups to upgrade your blaster</li>
+                        <li>Score points, survive waves, and avoid enemy shots</li>
+                        <li>Lose all lives and it's game over — try again!</li>
+                    </ol>
+                </section>
+
+                <section class="about-section">
+                    <h3>About</h3>
+                    <p>A modern, accessible Space Invaders built with HTML5 Canvas and vanilla JavaScript. Runs fully in your browser — no libraries required.</p>
+                    
+                    <div class="maker-info">
+                        <p><strong>Maker:</strong> Dave Matthew S. Punzalan | ACSS Business Manager.</p>
+                    </div>
+                    
+                    <div class="source-info">
+                        <p><strong>Source code:</strong> HTML5, CSS3, Vanilla JavaScript, GIT</p>
+                    </div>
+                </section>
+
+                <!-- Power-ups Display -->
+                <section class="powerups-section">
+                    <h3>Power-ups</h3>
+                    <div class="powerup-grid">
+                        <div class="powerup-item">
+                            <div class="powerup-icon rapid-fire"></div>
+                            <span>Rapid Fire</span>
+                        </div>
+                        <div class="powerup-item">
+                            <div class="powerup-icon multi-shot"></div>
+                            <span>Multi Shot</span>
+                        </div>
+                        <div class="powerup-item">
+                            <div class="powerup-icon shield"></div>
+                            <span>Shield</span>
+                        </div>
+                        <div class="powerup-item">
+                            <div class="powerup-icon extra-life"></div>
+                            <span>Extra Life</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Enemy Types -->
+                <section class="enemies-section">
+                    <h3>Enemy Types</h3>
+                    <div class="enemy-grid">
+                        <div class="enemy-item">
+                            <div class="enemy-icon basic-alien"></div>
+                            <span>Basic Alien (10pts)</span>
+                        </div>
+                        <div class="enemy-item">
+                            <div class="enemy-icon fast-alien"></div>
+                            <span>Fast Alien (20pts)</span>
+                        </div>
+                        <div class="enemy-item">
+                            <div class="enemy-icon boss-alien"></div>
+                            <span>Boss Alien (50pts)</span>
+                        </div>
+                        <div class="enemy-item">
+                            <div class="enemy-icon ufo"></div>
+                            <span>UFO (100pts)</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Statistics -->
+                <section class="stats-section">
+                    <h3>Statistics</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-label">High Score:</span>
+                            <span id="highScore" class="stat-value">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Enemies Killed:</span>
+                            <span id="enemiesKilled" class="stat-value">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Accuracy:</span>
+                            <span id="accuracy" class="stat-value">0%</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Time Played:</span>
+                            <span id="timePlayed" class="stat-value">0:00</span>
+                        </div>
+                    </div>
+                </section>
+            </aside>
+        </main>
+
+        <!-- Footer -->
+        <footer class="game-footer">
+            <p>&copy; ACSS | Space Invaders — Dark Space</p>
+        </footer>
+
+        <!-- Particle Background -->
+        <div class="particle-background">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="shootSound" preload="auto">
+        <source src="ASSETS/shoot.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="explosionSound" preload="auto">
+        <source src="ASSETS/explosion.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="powerupSound" preload="auto">
+        <source src="ASSETS/Pluto.mp3" type="audio/mpeg">
+    </audio>
+    <!-- Background Music -->
+    <audio id="backgroundMusic" preload="auto" loop>
+        <source src="ASSETS/Pluto.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="game.js"></script>
+</body>
+</html>
