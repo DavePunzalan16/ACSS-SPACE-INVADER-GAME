@@ -1,7 +1,7 @@
 // ===== LOADING PAGE CONTROLLER =====
 class LoadingPageController {
     constructor() {
-        this.loadingDuration = 5000; // 5 seconds
+        this.loadingDuration = 20000; // 20 seconds
         this.startTime = Date.now();
         this.isComplete = false;
         
