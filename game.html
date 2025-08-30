@@ -18,9 +18,13 @@
                 <img src="ASSETS/LOGO-NO-BG.png" alt="Game Logo" style="width:48px; height:48px; margin-left:12px; vertical-align:middle;">
             </div>
             <div class="game-controls">
-                <button id="startBtn" class="control-btn">Start</button>
-                <button id="pauseBtn" class="control-btn">Pause</button>
-                <button id="fullscreenBtn" class="control-btn">Full Screen</button>
+                <button id="homeBtn" class="control-btn home-btn" onclick="goToHome()">
+                    <span class="btn-icon">🏠</span>
+                    <span class="btn-text">Home</span>
+                </button>
+                <button id="startBtn" class="control-btn home-btn">Start</button>
+                <button id="pauseBtn" class="control-btn home-btn">Pause</button>
+                <button id="fullscreenBtn" class="control-btn home-btn">Full Screen</button>
             </div>
         </header>
 
@@ -95,19 +99,19 @@
                     <h3>Power-ups</h3>
                     <div class="powerup-grid">
                         <div class="powerup-item">
-                            <div class="powerup-icon rapid-fire"></div>
+                            <img src="ASSETS/rapidFire.png" class="powerup-icon" alt="Rapid Fire">
                             <span>Rapid Fire</span>
                         </div>
                         <div class="powerup-item">
-                            <div class="powerup-icon multi-shot"></div>
+                            <img src="ASSETS/multishots.png" class="powerup-icon" alt="Multi Shot">
                             <span>Multi Shot</span>
                         </div>
                         <div class="powerup-item">
-                            <div class="powerup-icon shield"></div>
+                            <img src="ASSETS/shield.png" class="powerup-icon" alt="Shield">
                             <span>Shield</span>
                         </div>
                         <div class="powerup-item">
-                            <div class="powerup-icon extra-life"></div>
+                            <img src="ASSETS/goldheart.png" class="powerup-icon" alt="Extra Life">
                             <span>Extra Life</span>
                         </div>
                     </div>
@@ -118,23 +122,24 @@
                     <h3>Enemy Types</h3>
                     <div class="enemy-grid">
                         <div class="enemy-item">
-                            <div class="enemy-icon basic-alien"></div>
+                            <img src="ASSETS/enemy1violetside.png" class="enemy-icon" alt="Basic Alien">
                             <span>Basic Alien (10pts)</span>
                         </div>
                         <div class="enemy-item">
-                            <div class="enemy-icon fast-alien"></div>
+                            <img src="ASSETS/enemy2yellowside.png" class="enemy-icon" alt="Fast Alien">
                             <span>Fast Alien (20pts)</span>
                         </div>
                         <div class="enemy-item">
-                            <div class="enemy-icon boss-alien"></div>
+                            <img src="ASSETS/enemy3greenside.png" class="enemy-icon" alt="Boss Alien">
                             <span>Boss Alien (50pts)</span>
                         </div>
                         <div class="enemy-item">
-                            <div class="enemy-icon ufo"></div>
+                            <img src="ASSETS/enemy4blueside.png" class="enemy-icon" alt="UFO">
                             <span>UFO (100pts)</span>
                         </div>
                     </div>
                 </section>
+
 
                 <!-- Statistics -->
                 <section class="stats-section">

@@ -3,141 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACSS Space Invaders - Loading</title>
-    <link rel="stylesheet" href="loading.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <title>ACSS Space Invaders - Home</title>
+    <link rel="icon" type="image/png" href="ASSETS/ACSSGAMELOGO.png">
+    <link rel="stylesheet" href="home-style.css">
 </head>
 <body>
-    <!-- Animated Starfield Background -->
-    <div class="starfield">
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-    </div>
-
-    <!-- Floating Particles -->
-    <div class="particles">
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-    </div>
-
-    <!-- Moving Grid Background -->
-    <div class="grid-overlay"></div>
-
-    <!-- Main Loading Container -->
-    <div class="loading-container">
-        <!-- Logo Section -->
-        <div class="logo-section">
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
             <div class="logo-container">
-                <img src="ASSETS/LOGO-NO-BG.png" alt="ACSS Logo" class="logo">
-                <div class="logo-glow"></div>
+                <img src="ASSETS/LOGO-NO-BG.png" alt="ACSS Logo" class="acss-logo">
             </div>
-        </div>
-
-        <!-- Text Section -->
-        <div class="text-section">
-            <h1 class="welcome-text">
-                <span class="text-line">Welcome to ACSS</span>
-                <span class="text-line highlight">Space Invader Game</span>
-            </h1>
-            
-            <div class="credits">
-                <p class="made-by">Made by <span class="creator">Dave Punzalan</span></p>
-                <p class="company">ACSS Business Manager</p>
-            </div>
-        </div>
-
-        <!-- Loading Section -->
-        <div class="loading-section">
-            <div class="loading-text">
-                <span class="loading-label">LOADING</span>
-                <span class="loading-dots">
-                    <span class="dot">.</span>
-                    <span class="dot">.</span>
-                    <span class="dot">.</span>
-                </span>
-            </div>
-            
-            <div class="progress-container">
-                <div class="progress-bar">
-                    <div class="progress-fill"></div>
-                    <div class="progress-glow"></div>
+            <div class="loading-bar-container">
+                <div class="loading-bar">
+                    <div class="loading-progress"></div>
                 </div>
-                <div class="percentage">0%</div>
+                <p class="loading-text">Loading Game Assets...</p>
             </div>
         </div>
+    </div>
 
-        <!-- Animated Dinosaur -->
+    <!-- Main Home Screen -->
+    <div id="homeScreen" class="home-screen hidden">
+        <!-- Background Elements -->
+        <div class="stars-background"></div>
+        <div class="moving-spaceship">
+            <img src="ASSETS/AcssShip.png" alt="Spaceship" class="spaceship-image">
+        </div>
+        
+        <!-- Dinosaur Background -->
         <div class="dinosaur-container">
-            <div class="dinosaur">
-                <div class="dino-body">🦕</div>
-                <div class="dino-shadow"></div>
+            <img src="ASSETS/game1.gif" alt="Animated Dinosaur" class="dinosaur-gif">
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Logo Section -->
+            <div class="header-section">
+                <div class="logo-display">
+                    <img src="ASSETS/LOGO-NO-BG.png" alt="ACSS Logo" class="main-logo">
+                </div>
+                
+                <!-- Game Title -->
+                <h1 class="game-title">
+                    <span class="title-word">ACSS SPACE INVADERS</span>
+                </h1>
+                
+                <!-- Moving Spaceship Element -->
+                <div class="title-spaceship">
+                    <img src="ASSETS/AcssShip.png" alt="Title Spaceship" class="title-ship-image">
+                </div>
+            </div>
+
+            <!-- Menu Buttons -->
+            <div class="menu-container">
+                <button class="menu-btn start-btn" onclick="startGame()">
+                    <span class="btn-icon">🚀</span>
+                    <span class="btn-text">START GAME</span>
+                </button>
+                
+                <button class="menu-btn settings-btn" onclick="openSettings()">
+                    <span class="btn-icon">⚙️</span>
+                    <span class="btn-text">SETTINGS</span>
+                </button>
+                
+                <button class="menu-btn exit-btn" onclick="exitGame()">
+                    <span class="btn-icon">❌</span>
+                    <span class="btn-text">EXIT</span>
+                </button>
+            </div>
+
+            <!-- Welcome Text -->
+            <div class="welcome-section">
+                <p class="welcome-text pixel-text">
+                    WELCOME TO ACSS SPACE INVADER GAME
+                </p>
+                <p class="creator-text pixel-text">
+                    MADE BY DAVE PUNZALAN | ACSS BUSINESS MANAGER
+                </p>
+            </div>
+        </div>
+
+        <!-- Version Info -->
+        <div class="version-info">
+            <p>v2.0.0 | Dark Space Edition</p>
+        </div>
+    </div>
+
+    <!-- Settings Modal here -->
+    <div id="settingsModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Game Credits & Information</h2>
+                <button class="close-btn" onclick="closeSettings()">&times;</button>
+            </div>
+            
+            <div class="credits-scroll">
+                <div class="credits-content">
+                    <div class="credit-section">
+                        <h3>🎮 ACSS SPACE INVADERS</h3>
+                        <p>A modern take on the classic arcade shooter</p>
+                    </div>
+                    
+                    <div class="credit-section">
+                        <h3>👨‍💼 CREATED BY</h3>
+                        <p><strong>Dave Punzalan</strong></p>
+                        <p>ACSS Business Manager</p>
+                        <p>Game Designer & Developer</p>
+                    </div>
+                    
+                    <div class="credit-section">
+                        <h3>🏢 Organization</h3>
+                        <p><strong>ACSS (Association of Computer Studies Students)</strong></p>
+                        <p>CS and IT student Organization in UE-Caloocan</p>
+                    </div>
+                    
+                    <div class="credit-section">
+                        <h3>🎯 GAME FEATURES</h3>
+                        <p>• Classic Space Invaders gameplay</p>
+                        <p>• Power-ups and special abilities</p>
+                        <p>• Progressive difficulty levels</p>
+                        <p>• Particle effects and animations</p>
+                        <p>• Mobile and desktop support</p>
+                        <p>• Local high score saving</p>
+                    </div>
+                    
+                    <div class="credit-section">
+                        <h3>🛠️ TECHNOLOGY STACK</h3>
+                        <p>• HTML5 Canvas</p>
+                        <p>• Vanilla JavaScript</p>
+                        <p>• CSS3 Animations</p>
+                        <p>• Responsive Design</p>
+                    </div>
+                    
+                    <div class="credit-section">
+                        <h3>🎵 AUDIO & GRAPHICS</h3>
+                        <p>• Custom pixel art sprites</p>
+                        <p>• Procedural particle effects</p>
+                        <p>• 8-bit inspired sound design</p>
+                        <p>• Dynamic visual feedback</p>
+                    </div>
+                    
+                    <div class="credit-section">
+                        <h3>🏆 SPECIAL THANKS</h3>
+                        <p>• ACSS Team for support</p>
+                        <p>• Beta testers and feedback</p>
+                        <p>• Classic arcade game developers</p>
+                    </div>
+                    
+                    <div class="credit-section final-section">
+                        <h3>🌟 THANK YOU FOR PLAYING!</h3>
+                        <p>Defend Earth from the alien invasion!</p>
+                        <p class="copyright">© 2025 ACSS - All Rights Reserved</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Scan Lines Effect -->
-    <div class="scan-lines"></div>
-
-    <!-- Power Button Effect -->
-    <div class="power-button">
-        <div class="power-ring"></div>
-        <div class="power-core"></div>
+    <!-- Particle Effects Container -->
+    <div class="particles-container">
+        <!-- Particles will be on JavaScript uwu -->
     </div>
 
-    <!-- Game Title Overlay -->
-    <div class="game-title-overlay">
-        <div class="title-glitch" data-text="SPACE INVADERS">SPACE INVADERS</div>
-        <div class="subtitle">Retro Edition</div>
-    </div>
-
-    <!-- Loading Sound Indicator -->
-    <div class="sound-waves">
-        <div class="wave wave1"></div>
-        <div class="wave wave2"></div>
-        <div class="wave wave3"></div>
-        <div class="wave wave4"></div>
-    </div>
-
-    <!-- Version Info -->
-    <div class="version-info">
-        <span>Version 1.0</span>
-        <span>Build 2025</span>
-    </div>
-
-    <!-- JavaScript -->
-    <script src="loading.js"></script>
+    <script src="home-script.js"></script>
 </body>
 </html>

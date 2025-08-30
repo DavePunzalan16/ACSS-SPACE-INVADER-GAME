@@ -1,0 +1,890 @@
+/* ===== RESET AND BASE STYLES ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@font-face {
+    font-family: 'PixelFont';
+    src: url('data:font/truetype;charset=utf-8;base64,') format('truetype');
+    /* para ma Fallback papuntang monospace para maging pixel-like appearance */
+}
+
+body {
+    font-family: 'Courier New', 'Consolas', monospace;
+    background: linear-gradient(135deg, 
+        #0a1a0a 0%, 
+        #1a3a1a 25%, 
+        #0f2f0f 50%, 
+        #2a4a2a 75%, 
+        #1a3a1a 100%);
+    color: #90ff90;
+    overflow: hidden;
+    height: 100vh;
+    position: relative;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ===== LOADING SCREEN ===== */
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, 
+        #051005 0%, 
+        #0a1a0a 50%, 
+        #051005 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: loadingPulse 2s infinite ease-in-out;
+}
+
+.loading-content {
+    text-align: center;
+    animation: fadeInScale 1s ease-out;
+}
+
+.logo-container {
+    margin-bottom: 40px;
+}
+
+.acss-logo {
+    width: 120px;
+    height: 120px;
+    filter: drop-shadow(0 0 20px rgba(144, 255, 144, 0.8));
+    animation: logoSpin 3s infinite linear, logoPulse 2s infinite ease-in-out;
+}
+
+.loading-bar-container {
+    width: 300px;
+    margin: 0 auto;
+}
+
+.loading-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(16, 48, 16, 0.8);
+    border: 2px solid rgba(144, 255, 144, 0.4);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.loading-progress {
+    height: 100%;
+    background: linear-gradient(90deg, 
+        #40ff40 0%, 
+        #90ff90 50%, 
+        #40ff40 100%);
+    width: 0%;
+    animation: loadingBar 3s ease-in-out forwards, loadingGlow 1s infinite;
+    border-radius: 6px;
+}
+
+.loading-text {
+    color: #70d070;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    animation: textPulse 1.5s infinite;
+}
+
+/* ===== HOME SCREEN ===== */
+.home-screen {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: 
+        radial-gradient(circle at 20% 30%, rgba(0, 64, 0, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(0, 128, 0, 0.1) 0%, transparent 50%),
+        linear-gradient(135deg, 
+            #0a1a0a 0%, 
+            #1a3a1a 25%, 
+            #0f2f0f 50%, 
+            #2a4a2a 75%, 
+            #1a3a1a 100%);
+    overflow: hidden;
+}
+
+/* ===== ANIMATED STARS BACKGROUND ===== */
+.stars-background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.stars-background::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(2px 2px at 20px 30px, rgba(144, 255, 144, 0.8), transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(144, 255, 144, 0.6), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(144, 255, 144, 0.9), transparent),
+        radial-gradient(1px 1px at 130px 80px, rgba(144, 255, 144, 0.4), transparent),
+        radial-gradient(2px 2px at 160px 30px, rgba(144, 255, 144, 0.7), transparent);
+    background-repeat: repeat;
+    background-size: 200px 100px;
+    animation: starsMove 20s linear infinite;
+}
+
+/* ===== MOVING SPACESHIP BACKGROUND ===== */
+.moving-spaceship {
+    position: absolute;
+    top: 20%;
+    left: -100px;
+    z-index: 2;
+    animation: spaceshipFly 15s linear infinite;
+}
+
+.spaceship-image {
+    width: 60px;
+    height: 40px;
+    filter: drop-shadow(0 0 10px rgba(144, 255, 144, 0.6));
+    transform: rotate(-10deg);
+}
+
+/* ===== DINOSAUR BACKGROUND ===== */
+.dinosaur-container {
+    position: absolute;
+    bottom: 10%;
+    right: 5%;
+    z-index: 2;
+    opacity: 0.3;
+    animation: dinosaurFloat 4s ease-in-out infinite;
+}
+
+.dinosaur-gif {
+    width: 150px;
+    height: 150px;
+    filter: sepia(100%) hue-rotate(90deg) brightness(0.8);
+}
+
+/* ===== MAIN CONTENT ===== */
+.main-content {
+    text-align: center;
+    z-index: 10;
+    position: relative;
+    animation: contentSlideIn 1.5s ease-out;
+}
+
+/* ===== HEADER SECTION ===== */
+.header-section {
+    margin-bottom: 50px;
+    position: relative;
+}
+
+.logo-display {
+    margin-bottom: 30px;
+}
+
+.main-logo {
+    width: 80px;
+    height: 80px;
+    filter: drop-shadow(0 0 15px rgba(144, 255, 144, 0.8));
+    animation: mainLogoFloat 3s ease-in-out infinite;
+}
+
+.game-title {
+    font-size: 4rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 6px;
+    margin-bottom: 20px;
+    text-shadow: 
+        0 0 10px rgba(144, 255, 144, 0.8),
+        0 0 20px rgba(144, 255, 144, 0.6),
+        0 0 30px rgba(144, 255, 144, 0.4),
+        0 0 40px rgba(144, 255, 144, 0.2);
+    background: linear-gradient(45deg, 
+        #90ff90 0%, 
+        #40ff40 25%, 
+        #90ff90 50%, 
+        #40ff40 75%, 
+        #90ff90 100%);
+    background-size: 400% 400%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: titleGlow 3s ease-in-out infinite, gradientShift 4s ease-in-out infinite;
+    position: relative;
+}
+
+.title-word {
+    display: inline-block;
+    animation: titleBounce 2s ease-in-out infinite;
+}
+
+.title-word:nth-child(1) { animation-delay: 0s; }
+.title-word:nth-child(2) { animation-delay: 0.3s; }
+.title-word:nth-child(3) { animation-delay: 0.6s; }
+
+.title-spaceship {
+    position: absolute;
+    top: 50%;
+    right: -80px;
+    transform: translateY(-50%);
+}
+
+.title-ship-image {
+    width: 50px;
+    height: 30px;
+    filter: drop-shadow(0 0 8px rgba(144, 255, 144, 0.6));
+    animation: titleShipMove 2s ease-in-out infinite;
+}
+
+/* ===== MENU BUTTONS ===== */
+.menu-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 40px;
+    align-items: center;
+}
+
+.menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 15px 40px;
+    background: linear-gradient(135deg, 
+        rgba(32, 64, 32, 0.9) 0%, 
+        rgba(16, 48, 16, 0.9) 100%);
+    border: 2px solid rgba(144, 255, 144, 0.4);
+    color: #90ff90;
+    font-family: inherit;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    border-radius: 10px;
+    min-width: 280px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(144, 255, 144, 0.2) 50%, 
+        transparent 100%);
+    transition: left 0.5s ease;
+}
+
+.menu-btn:hover {
+    background: linear-gradient(135deg, 
+        rgba(48, 96, 48, 1) 0%, 
+        rgba(32, 64, 32, 1) 100%);
+    border-color: rgba(144, 255, 144, 0.8);
+    box-shadow: 
+        0 0 20px rgba(144, 255, 144, 0.4),
+        inset 0 0 20px rgba(144, 255, 144, 0.1);
+    transform: translateY(-3px) scale(1.02);
+}
+
+.menu-btn:hover::before {
+    left: 100%;
+}
+
+.menu-btn:active {
+    transform: translateY(-1px) scale(0.98);
+}
+
+.btn-icon {
+    font-size: 24px;
+    filter: drop-shadow(0 0 5px rgba(144, 255, 144, 0.5));
+}
+
+.btn-text {
+    font-size: 16px;
+}
+
+.start-btn {
+    animation: startBtnPulse 2s infinite ease-in-out;
+}
+
+.settings-btn:hover {
+    border-color: rgba(255, 255, 144, 0.6);
+    color: #ffff90;
+}
+
+.exit-btn:hover {
+    border-color: rgba(255, 144, 144, 0.6);
+    color: #ff9090;
+}
+
+/* ===== WELCOME SECTION ===== */
+.welcome-section {
+    margin-top: 30px;
+}
+
+.pixel-text {
+    font-family: 'Courier New', monospace;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 0 5px rgba(144, 255, 144, 0.3);
+}
+
+.welcome-text {
+    font-size: 16px;
+    color: #70d070;
+    margin-bottom: 10px;
+    animation: welcomeTypewriter 3s steps(30) 1s forwards;
+    width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    margin: 0 auto 10px auto;
+}
+
+.creator-text {
+    font-size: 14px;
+    color: #50b050;
+    animation: creatorTypewriter 3s steps(40) 2s forwards;
+    width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    margin: 0 auto;
+}
+
+/* ===== VERSION INFO ===== */
+.version-info {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 12px;
+    color: rgba(144, 255, 144, 0.5);
+    z-index: 15;
+}
+
+/* ===== MODAL STYLES ===== */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    backdrop-filter: blur(10px);
+}
+
+.modal-content {
+    background: linear-gradient(135deg, 
+        rgba(16, 48, 16, 0.95) 0%, 
+        rgba(8, 32, 8, 0.95) 100%);
+    border: 2px solid rgba(144, 255, 144, 0.4);
+    border-radius: 15px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80%;
+    box-shadow: 0 0 50px rgba(144, 255, 144, 0.3);
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+    border-bottom: 1px solid rgba(144, 255, 144, 0.2);
+}
+
+.modal-header h2 {
+    color: #90ff90;
+    font-size: 24px;
+    text-shadow: 0 0 10px rgba(144, 255, 144, 0.5);
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: #90ff90;
+    font-size: 30px;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+    background: rgba(255, 144, 144, 0.2);
+    color: #ff9090;
+    transform: scale(1.1);
+}
+
+.credits-scroll {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 0 10px;
+}
+
+.credits-scroll::-webkit-scrollbar {
+    width: 8px;
+}
+
+.credits-scroll::-webkit-scrollbar-track {
+    background: rgba(8, 24, 8, 0.3);
+    border-radius: 4px;
+}
+
+.credits-scroll::-webkit-scrollbar-thumb {
+    background: rgba(144, 255, 144, 0.4);
+    border-radius: 4px;
+}
+
+.credits-content {
+    padding: 20px;
+    animation: creditsRoll 20s linear infinite;
+}
+
+.credit-section {
+    margin-bottom: 30px;
+    padding: 15px;
+    background: rgba(8, 24, 8, 0.3);
+    border: 1px solid rgba(144, 255, 144, 0.2);
+    border-radius: 8px;
+    animation: creditFadeIn 0.5s ease-in;
+}
+
+.credit-section h3 {
+    color: #90ff90;
+    font-size: 18px;
+    margin-bottom: 10px;
+    text-shadow: 0 0 5px rgba(144, 255, 144, 0.3);
+}
+
+.credit-section p {
+    color: #70d070;
+    line-height: 1.6;
+    margin-bottom: 5px;
+}
+
+.final-section {
+    text-align: center;
+    border-color: rgba(144, 255, 144, 0.6);
+    background: rgba(16, 48, 16, 0.5);
+}
+
+.copyright {
+    font-size: 12px;
+    color: rgba(144, 255, 144, 0.6);
+    margin-top: 15px;
+}
+
+/* ===== PARTICLES CONTAINER ===== */
+.particles-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes loadingPulse {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
+}
+
+@keyframes logoSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes logoPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+@keyframes loadingBar {
+    0% { width: 0%; }
+    100% { width: 100%; }
+}
+
+@keyframes loadingGlow {
+    0%, 100% { box-shadow: 0 0 5px rgba(64, 255, 64, 0.5); }
+    50% { box-shadow: 0 0 15px rgba(64, 255, 64, 0.8); }
+}
+
+@keyframes textPulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+@keyframes fadeInScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes starsMove {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-100px); }
+}
+
+@keyframes spaceshipFly {
+    0% {
+        left: -100px;
+        transform: translateY(0) rotate(-10deg);
+    }
+    25% {
+        transform: translateY(-20px) rotate(-5deg);
+    }
+    50% {
+        transform: translateY(10px) rotate(-15deg);
+    }
+    75% {
+        transform: translateY(-10px) rotate(-8deg);
+    }
+    100% {
+        left: calc(100% + 100px);
+        transform: translateY(0) rotate(-10deg);
+    }
+}
+
+@keyframes dinosaurFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+@keyframes contentSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes mainLogoFloat {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-10px) scale(1.05); }
+}
+
+@keyframes titleGlow {
+    0%, 100% {
+        text-shadow: 
+            0 0 10px rgba(144, 255, 144, 0.8),
+            0 0 20px rgba(144, 255, 144, 0.6),
+            0 0 30px rgba(144, 255, 144, 0.4);
+    }
+    50% {
+        text-shadow: 
+            0 0 15px rgba(144, 255, 144, 1),
+            0 0 25px rgba(144, 255, 144, 0.8),
+            0 0 35px rgba(144, 255, 144, 0.6),
+            0 0 45px rgba(144, 255, 144, 0.4);
+    }
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes titleBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+@keyframes titleShipMove {
+    0%, 100% { transform: translateY(-50%) translateX(0); }
+    50% { transform: translateY(-50%) translateX(10px); }
+}
+
+@keyframes startBtnPulse {
+    0%, 100% { 
+        box-shadow: 0 0 10px rgba(144, 255, 144, 0.3);
+        transform: scale(1);
+    }
+    50% { 
+        box-shadow: 0 0 20px rgba(144, 255, 144, 0.5);
+        transform: scale(1.02);
+    }
+}
+
+@keyframes welcomeTypewriter {
+    0% { width: 0; }
+    100% { width: 100%; }
+}
+
+@keyframes creatorTypewriter {
+    0% { width: 0; }
+    100% { width: 100%; }
+}
+
+@keyframes modalSlideIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.8) translateY(-50px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes creditsRoll {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-50px); }
+}
+
+@keyframes creditFadeIn {
+    0% { 
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    100% { 
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .game-title {
+        font-size: 2.5rem;
+        letter-spacing: 3px;
+    }
+    
+    .menu-btn {
+        min-width: 250px;
+        padding: 12px 30px;
+        font-size: 16px;
+    }
+    
+    .title-spaceship {
+        display: none;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 20px;
+    }
+    
+    .dinosaur-container {
+        display: none;
+    }
+    
+    .moving-spaceship {
+        top: 10%;
+    }
+    
+    .spaceship-image {
+        width: 40px;
+        height: 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .game-title {
+        font-size: 2rem;
+        letter-spacing: 2px;
+    }
+    
+    .main-logo {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .menu-btn {
+        min-width: 220px;
+        padding: 10px 25px;
+        font-size: 14px;
+    }
+    
+    .btn-icon {
+        font-size: 20px;
+    }
+    
+    .welcome-text {
+        font-size: 14px;
+    }
+    
+    .creator-text {
+        font-size: 12px;
+    }
+    
+    .modal-content {
+        width: 98%;
+        max-height: 90%;
+    }
+    
+    .modal-header {
+        padding: 15px 20px;
+    }
+    
+    .modal-header h2 {
+        font-size: 20px;
+    }
+    
+    .credits-content {
+        padding: 15px;
+    }
+    
+    .credit-section {
+        padding: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .credit-section h3 {
+        font-size: 16px;
+    }
+}
+
+/* ===== HIGH CONTRAST MODE ===== */
+@media (prefers-contrast: high) {
+    body {
+        background: #000;
+        color: #fff;
+    }
+    
+    .game-title {
+        color: #fff;
+        text-shadow: none;
+        -webkit-text-fill-color: #fff;
+    }
+    
+    .menu-btn {
+        background: #333;
+        border-color: #fff;
+        color: #fff;
+    }
+    
+    .menu-btn:hover {
+        background: #555;
+    }
+}
+
+/* ===== REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .stars-background::before {
+        animation: none;
+    }
+    
+    .moving-spaceship {
+        display: none;
+    }
+    
+    .dinosaur-container {
+        animation: none;
+    }
+}
+
+/* ===== CUSTOM SCROLLBAR STYLES ===== */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(8, 24, 8, 0.3);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(144, 255, 144, 0.4);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(144, 255, 144, 0.6);
+}
+
+/* ===== UTILITY CLASSES ===== */
+.glow {
+    filter: drop-shadow(0 0 10px rgba(144, 255, 144, 0.6));
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+.fade-in {
+    animation: fadeIn 1s ease-in;
+}
+
+.slide-up {
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes slideUp {
+    0% { 
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% { 
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+    .loading-screen,
+    .particles-container,
+    .moving-spaceship,
+    .dinosaur-container {
+        display: none !important;
+    }
+    
+    body {
+        background: white !important;
+        color: black !important;
+    }
+    
+    .modal-content {
+        box-shadow: none !important;
+        border: 2px solid black !important;
+    }
+}

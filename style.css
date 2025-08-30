@@ -233,6 +233,30 @@ body {
         opacity: 0.8;
     }
 }
+/* Home Button Styles */
+.home-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, rgba(48, 64, 48, 0.9) 0%, rgba(32, 48, 32, 0.9) 100%);
+    border-color: rgba(255, 215, 0, 0.4);
+    color: #ffd700;
+}
+
+.home-btn:hover {
+    border-color: rgba(255, 215, 0, 0.6);
+    color: #ffed4e;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.home-btn .btn-icon {
+    animation: homeIconPulse 2s infinite ease-in-out;
+}
+
+@keyframes homeIconPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
 
 .logo h1 {
     font-size: 22px;

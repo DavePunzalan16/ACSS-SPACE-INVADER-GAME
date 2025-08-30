@@ -1,4 +1,4 @@
-// Space Invaders Game - JavaScript Implementation
+     // Space Invaders Game - JavaScript Implementation
 class SpaceInvadersGame {
     constructor() {
         this.canvas = document.getElementById('gameCanvas');
@@ -8,8 +8,35 @@ class SpaceInvadersGame {
         this.ctx = this.canvas.getContext('2d');
         this.gameOverlay = document.getElementById('gameOverlay');
         
+        // Load enemy images
+        this.enemyImages = {
+            basic: new Image(),
+            fast: new Image(),
+            boss: new Image(),
+            ufo: new Image()
+        };
+
+        this.enemyImages.basic.src = "ASSETS/enemiesVioletfront.png";
+        this.enemyImages.fast.src = "ASSETS/enemiesYellowFront.png";
+        this.enemyImages.boss.src = "ASSETS/enemiesGreenfront.png";
+        this.enemyImages.ufo.src = "ASSETS/enemiesBlueFront.png";
+        // Load powerup images
+        this.powerupImages = {
+            rapidFire: new Image(),
+            multiShot: new Image(),
+            shield: new Image(),
+            extraLife: new Image()
+        };
+
+        this.powerupImages.rapidFire.src = "ASSETS/rapidFire.png";       // Rapid Fire
+        this.powerupImages.multiShot.src = "ASSETS/multishots.png";  // Multi Shot
+        this.powerupImages.shield.src = "ASSETS/shield.png";      // Shield
+        this.powerupImages.extraLife.src = "ASSETS/goldheart.png"; // Extra Life
+
+
+        
         // Game state
-        this.gameState = 'menu'; // menu, playing, paused, gameOver
+        this.gameState = 'menu'; 
         this.score = 0;
         this.lives = 3;
         this.level = 1;
@@ -77,6 +104,7 @@ class SpaceInvadersGame {
         document.getElementById('pauseBtn').addEventListener('click', () => this.togglePause());
         document.getElementById('fullscreenBtn').addEventListener('click', () => this.toggleFullscreen());
         document.getElementById('startGameBtn').addEventListener('click', () => this.startGame());
+        document.getElementById('homeBtn').addEventListener('click', () => this.goToHome());
 
         // Mouse events for mobile support
         this.canvas.addEventListener('click', (e) => {
@@ -159,10 +187,11 @@ class SpaceInvadersGame {
 
         for (let row = 0; row < rows; row++) {
             for (let col = 0; col < cols; col++) {
-                let type = 'basic';
-                if (row === 0) type = 'boss';
-                else if (row === 1) type = 'fast';
-                else if (row === 2) type = 'medium';
+                let type;
+                if (row === 0) type = "ufo";      // top row UFO
+                else if (row === 1) type = "boss"; // second row Boss
+                else if (row === 2) type = "fast"; // third row Fast
+                else type = "basic"; 
 
                 this.enemies.push({
                     x: startX + col * spacing,
@@ -214,6 +243,22 @@ class SpaceInvadersGame {
         } else {
             document.exitFullscreen();
         }
+    }
+
+    goToHome() {
+        if (this.gameState === 'playing' && this.score > 0) {
+            const confirmation = confirm('Are you sure you want to return to home? Your current progress will be lost.');
+            if (!confirmation) {
+                return;
+            }
+        }
+
+        document.body.style.transition = 'opacity 0.5s ease-out';
+        document.body.style.opacity = '0';
+
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 500);
     }
 
     shoot() {
@@ -627,42 +672,26 @@ class SpaceInvadersGame {
 
     renderEnemies() {
         for (let enemy of this.enemies) {
-            // Set color based on enemy type
-            switch(enemy.type) {
-                case 'boss':
-                    this.ctx.fillStyle = '#ff6090';
-                    break;
-                case 'fast':
-                    this.ctx.fillStyle = '#ff9060';
-                    break;
-                case 'medium':
-                    this.ctx.fillStyle = '#60ff90';
-                    break;
-                default:
-                    this.ctx.fillStyle = '#90ff60';
+            let img;
+
+            switch (enemy.type) {
+                case 'boss': img = this.enemyImages.boss; break;
+                case 'fast': img = this.enemyImages.fast; break;
+                case 'ufo':  img = this.enemyImages.ufo; break;
+                default:     img = this.enemyImages.basic;
             }
-            
-            // Draw enemy body
-            this.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
-            
-            // Draw enemy details based on type
-            this.ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-            if (enemy.type === 'boss') {
-                // Boss pattern
-                this.ctx.fillRect(enemy.x + 5, enemy.y + 5, 20, 5);
-                this.ctx.fillRect(enemy.x + 10, enemy.y + 15, 10, 5);
+
+            if (img && img.complete && img.naturalWidth > 0) {
+                this.ctx.drawImage(img, enemy.x, enemy.y, enemy.width, enemy.height);
             } else {
-                // Regular enemy pattern
-                this.ctx.fillRect(enemy.x + 8, enemy.y + 8, 14, 4);
-                this.ctx.fillRect(enemy.x + 12, enemy.y + 16, 6, 4);
+                // fallback (so you can see SOMETHING even if images fail)
+                this.ctx.fillStyle = '#90ff60';
+                this.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
             }
-            
-            // Draw eyes/sensors
-            this.ctx.fillStyle = '#ff0000';
-            this.ctx.fillRect(enemy.x + 8, enemy.y + 6, 3, 3);
-            this.ctx.fillRect(enemy.x + 19, enemy.y + 6, 3, 3);
         }
     }
+
+
 
     renderEnemyBullets() {
         this.ctx.fillStyle = '#ff6060';
@@ -678,47 +707,21 @@ class SpaceInvadersGame {
 
     renderPowerups() {
         for (let powerup of this.powerups) {
-            this.ctx.save();
-            this.ctx.translate(powerup.x + powerup.width / 2, powerup.y + powerup.height / 2);
-            this.ctx.rotate(powerup.rotation);
-            
-            // Set color based on powerup type
-            switch(powerup.type) {
-                case 'rapidFire':
-                    this.ctx.fillStyle = '#ff6b6b';
-                    break;
-                case 'multiShot':
-                    this.ctx.fillStyle = '#4834d4';
-                    break;
-                case 'shield':
-                    this.ctx.fillStyle = '#00d2d3';
-                    break;
-                case 'extraLife':
-                    this.ctx.fillStyle = '#feca57';
-                    break;
+            const img = this.powerupImages[powerup.type];
+            if (img && img.complete && img.naturalWidth !== 0) {
+                this.ctx.save();
+                this.ctx.translate(powerup.x + powerup.width / 2, powerup.y + powerup.height / 2);
+                this.ctx.rotate(powerup.rotation);
+                this.ctx.drawImage(img, -powerup.width / 2, -powerup.height / 2, powerup.width, powerup.height);
+                this.ctx.restore();
+            } else {
+                // Fallback if image not loaded yet
+                this.ctx.fillStyle = "yellow";
+                this.ctx.fillRect(powerup.x, powerup.y, powerup.width, powerup.height);
             }
-            
-            // Draw powerup shape
-            this.ctx.fillRect(-powerup.width / 2, -powerup.height / 2, powerup.width, powerup.height);
-            
-            // Draw powerup symbol
-            this.ctx.fillStyle = '#ffffff';
-            this.ctx.font = '16px monospace';
-            this.ctx.textAlign = 'center';
-            this.ctx.textBaseline = 'middle';
-            
-            let symbol = '';
-            switch(powerup.type) {
-                case 'rapidFire': symbol = '⚡'; break;
-                case 'multiShot': symbol = '⊕'; break;
-                case 'shield': symbol = '⬟'; break;
-                case 'extraLife': symbol = '♥'; break;
-            }
-            
-            this.ctx.fillText(symbol, 0, 0);
-            this.ctx.restore();
         }
     }
+
 
     renderParticles() {
         for (let particle of this.particles) {
