@@ -1,4 +1,4 @@
-     // Space Invaders Game - JavaScript Implementation
+// Space Invaders Game - JavaScript Implementation
 class SpaceInvadersGame {
     constructor() {
         this.canvas = document.getElementById('gameCanvas');
@@ -20,6 +20,7 @@ class SpaceInvadersGame {
         this.enemyImages.fast.src = "ASSETS/enemiesYellowFront.png";
         this.enemyImages.boss.src = "ASSETS/enemiesGreenfront.png";
         this.enemyImages.ufo.src = "ASSETS/enemiesBlueFront.png";
+        
         // Load powerup images
         this.powerupImages = {
             rapidFire: new Image(),
@@ -28,19 +29,17 @@ class SpaceInvadersGame {
             extraLife: new Image()
         };
 
-        this.powerupImages.rapidFire.src = "ASSETS/rapidFire.png";       // Rapid Fire
-        this.powerupImages.multiShot.src = "ASSETS/multishots.png";  // Multi Shot
-        this.powerupImages.shield.src = "ASSETS/shield.png";      // Shield
-        this.powerupImages.extraLife.src = "ASSETS/goldheart.png"; // Extra Life
+        this.powerupImages.rapidFire.src = "ASSETS/rapidFire.png";       
+        this.powerupImages.multiShot.src = "ASSETS/multishots.png";  
+        this.powerupImages.shield.src = "ASSETS/shield.png";      
+        this.powerupImages.extraLife.src = "ASSETS/goldheart.png"; 
 
-
-        
         // Game state
         this.gameState = 'menu'; 
         this.score = 0;
         this.lives = 3;
         this.level = 1;
-        this.highScore = localStorage.getItem('spaceInvadersHighScore') || 0;
+        this.highScore = 0; // Removed localStorage usage
         
         // Game objects
         this.player = null;
@@ -50,23 +49,41 @@ class SpaceInvadersGame {
         this.powerups = [];
         this.particles = [];
         
-        // Game settings
-        this.gameSpeed = 60; // FPS
-        this.enemySpeed = 1;
-        this.bulletSpeed = 5;
-        this.enemyBulletSpeed = 3;
+        // FIXED: Reset game settings to base values (no more speed accumulation bug)
+        this.baseEnemySpeed = 1; // Base speed that never changes
+        this.baseBulletSpeed = 5;
+        this.baseEnemyBulletSpeed = 3;
+        this.baseShootCooldown = 200;
+        
+        // Current game speeds (these get calculated from base values)
+        this.enemySpeed = this.baseEnemySpeed;
+        this.bulletSpeed = this.baseBulletSpeed;
+        this.enemyBulletSpeed = this.baseEnemyBulletSpeed;
+        this.shootCooldown = this.baseShootCooldown;
         
         // Input handling
         this.keys = {};
         this.lastShot = 0;
-        this.shootCooldown = 200; // milliseconds
         
         // Stats
         this.enemiesKilled = 0;
         this.shotsFired = 0;
         this.gameStartTime = null;
+
+        // ADDED: Mobile controls
+        this.isMobile = this.detectMobile();
+        this.touchControls = {
+            leftPressed: false,
+            rightPressed: false,
+            shootPressed: false
+        };
         
         this.init();
+    }
+
+    // ADDED: Mobile detection
+    detectMobile() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     }
 
     init() {
@@ -74,6 +91,12 @@ class SpaceInvadersGame {
         this.setupEventListeners();
         this.createPlayer();
         this.updateUI();
+        
+        // ADDED: Setup mobile controls if on mobile
+        if (this.isMobile) {
+            this.setupMobileControls();
+        }
+        
         this.gameLoop();
     }
 
@@ -86,6 +109,137 @@ class SpaceInvadersGame {
         const gameArea = this.canvas.parentElement;
         this.canvas.width = gameArea.clientWidth;
         this.canvas.height = gameArea.clientHeight;
+        
+        // ADDED: Recreate mobile controls on resize
+        if (this.isMobile) {
+            this.setupMobileControls();
+        }
+    }
+
+    // ADDED: Mobile controls setup
+    setupMobileControls() {
+        // Remove existing mobile controls
+        const existingControls = document.querySelector('.mobile-controls');
+        if (existingControls) {
+            existingControls.remove();
+        }
+
+        // Create mobile controls container
+        const mobileControls = document.createElement('div');
+        mobileControls.className = 'mobile-controls';
+        mobileControls.innerHTML = `
+            <div class="mobile-analog">
+                <div class="analog-stick">
+                    <div class="analog-knob"></div>
+                </div>
+            </div>
+            <div class="mobile-shoot-btn">FIRE</div>
+        `;
+
+        // Add to game area
+        this.canvas.parentElement.appendChild(mobileControls);
+
+        // Setup analog stick
+        this.setupAnalogStick();
+        
+        // Setup shoot button
+        this.setupShootButton();
+    }
+
+    // ADDED: Analog stick functionality
+    setupAnalogStick() {
+        const analogStick = document.querySelector('.analog-stick');
+        const analogKnob = document.querySelector('.analog-knob');
+        
+        if (!analogStick || !analogKnob) return;
+
+        let isDragging = false;
+        let centerX = 0;
+        let centerY = 0;
+        const maxDistance = 30;
+
+        const startDrag = (e) => {
+            isDragging = true;
+            const rect = analogStick.getBoundingClientRect();
+            centerX = rect.left + rect.width / 2;
+            centerY = rect.top + rect.height / 2;
+            
+            // Prevent default to avoid scrolling on mobile
+            e.preventDefault();
+        };
+
+        const updateDrag = (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+
+            let clientX, clientY;
+            if (e.touches) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+
+            const deltaX = clientX - centerX;
+            const deltaY = clientY - centerY;
+            const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+            let knobX = deltaX;
+            let knobY = deltaY;
+
+            if (distance > maxDistance) {
+                knobX = (deltaX / distance) * maxDistance;
+                knobY = (deltaY / distance) * maxDistance;
+            }
+
+            analogKnob.style.transform = `translate(${knobX}px, ${knobY}px)`;
+
+            // Update movement based on analog position
+            const moveThreshold = 10;
+            this.touchControls.leftPressed = knobX < -moveThreshold;
+            this.touchControls.rightPressed = knobX > moveThreshold;
+        };
+
+        const endDrag = () => {
+            isDragging = false;
+            analogKnob.style.transform = 'translate(0, 0)';
+            this.touchControls.leftPressed = false;
+            this.touchControls.rightPressed = false;
+        };
+
+        // Touch events
+        analogStick.addEventListener('touchstart', startDrag);
+        document.addEventListener('touchmove', updateDrag);
+        document.addEventListener('touchend', endDrag);
+
+        // Mouse events for testing on desktop
+        analogStick.addEventListener('mousedown', startDrag);
+        document.addEventListener('mousemove', updateDrag);
+        document.addEventListener('mouseup', endDrag);
+    }
+
+    // ADDED: Shoot button functionality
+    setupShootButton() {
+        const shootBtn = document.querySelector('.mobile-shoot-btn');
+        if (!shootBtn) return;
+
+        const startShoot = (e) => {
+            e.preventDefault();
+            this.touchControls.shootPressed = true;
+            shootBtn.classList.add('active');
+        };
+
+        const endShoot = (e) => {
+            e.preventDefault();
+            this.touchControls.shootPressed = false;
+            shootBtn.classList.remove('active');
+        };
+
+        shootBtn.addEventListener('touchstart', startShoot);
+        shootBtn.addEventListener('touchend', endShoot);
+        shootBtn.addEventListener('mousedown', startShoot);
+        shootBtn.addEventListener('mouseup', endShoot);
     }
 
     setupEventListeners() {
@@ -106,36 +260,18 @@ class SpaceInvadersGame {
         document.getElementById('startGameBtn').addEventListener('click', () => this.startGame());
         document.getElementById('homeBtn').addEventListener('click', () => this.goToHome());
 
-        // Mouse events for mobile support
+        // MODIFIED: Removed mouse movement controls (as requested)
         this.canvas.addEventListener('click', (e) => {
             if (this.gameState === 'playing') {
                 this.shoot();
             }
         });
 
-        this.canvas.addEventListener('mousemove', (e) => {
-            if (this.gameState === 'playing' && this.player) {
-                const rect = this.canvas.getBoundingClientRect();
-                const mouseX = e.clientX - rect.left;
-                this.player.targetX = mouseX;
-            }
-        });
-
-        // Touch events for mobile
+        // MODIFIED: Removed mouse movement (only keeping touch for mobile)
         this.canvas.addEventListener('touchstart', (e) => {
             e.preventDefault();
             if (this.gameState === 'playing') {
                 this.shoot();
-            }
-        });
-
-        this.canvas.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            if (this.gameState === 'playing' && this.player) {
-                const rect = this.canvas.getBoundingClientRect();
-                const touch = e.touches[0];
-                const touchX = touch.clientX - rect.left;
-                this.player.targetX = touchX;
             }
         });
     }
@@ -168,8 +304,7 @@ class SpaceInvadersGame {
             y: this.canvas.height - 95,      
             width: 70,
             height: 80,
-            speed: 5,
-            targetX: this.canvas.width / 2 - 15,
+            speed: 7, // INCREASED: Made player movement faster
             powerup: null,
             powerupTime: 0
         };
@@ -188,9 +323,9 @@ class SpaceInvadersGame {
         for (let row = 0; row < rows; row++) {
             for (let col = 0; col < cols; col++) {
                 let type;
-                if (row === 0) type = "ufo";      // top row UFO
-                else if (row === 1) type = "boss"; // second row Boss
-                else if (row === 2) type = "fast"; // third row Fast
+                if (row === 0) type = "ufo";      
+                else if (row === 1) type = "boss"; 
+                else if (row === 2) type = "fast"; 
                 else type = "basic"; 
 
                 this.enemies.push({
@@ -199,7 +334,7 @@ class SpaceInvadersGame {
                     width: enemyWidth,
                     height: enemyHeight,
                     type: type,
-                    speed: this.enemySpeed + (this.level * 0.2),
+                    speed: this.enemySpeed, // FIXED: Use current enemy speed, not accumulating
                     direction: 1,
                     shootChance: 0.001 + (this.level * 0.0002),
                     points: type === 'boss' ? 50 : type === 'fast' ? 20 : 10
@@ -220,6 +355,12 @@ class SpaceInvadersGame {
         this.enemiesKilled = 0;
         this.shotsFired = 0;
         this.gameStartTime = Date.now();
+        
+        // FIXED: Reset all speeds to base values (no more speed accumulation)
+        this.enemySpeed = this.baseEnemySpeed;
+        this.bulletSpeed = this.baseBulletSpeed;
+        this.enemyBulletSpeed = this.baseEnemyBulletSpeed;
+        this.shootCooldown = this.baseShootCooldown;
         
         this.createPlayer();
         this.createEnemies();
@@ -307,7 +448,7 @@ class SpaceInvadersGame {
             
             // Adjust cooldown for rapid fire powerup
             const cooldownMultiplier = this.player.powerup === 'rapidFire' ? 0.3 : 1;
-            this.shootCooldown = 200 * cooldownMultiplier;
+            this.shootCooldown = this.baseShootCooldown * cooldownMultiplier;
         }
     }
 
@@ -328,7 +469,7 @@ class SpaceInvadersGame {
     updatePlayer() {
         if (!this.player) return;
 
-        // Keyboard movement
+        // MODIFIED: Keyboard movement (A/D and Arrow Keys) - Made responsive
         if (this.keys['ArrowLeft'] || this.keys['KeyA']) {
             this.player.x -= this.player.speed;
         }
@@ -336,10 +477,17 @@ class SpaceInvadersGame {
             this.player.x += this.player.speed;
         }
 
-        // Mouse/touch movement
-        const dx = this.player.targetX - this.player.x;
-        if (Math.abs(dx) > 2) {
-            this.player.x += dx * 0.1;
+        // ADDED: Mobile controls
+        if (this.touchControls.leftPressed) {
+            this.player.x -= this.player.speed;
+        }
+        if (this.touchControls.rightPressed) {
+            this.player.x += this.player.speed;
+        }
+        
+        // Mobile shooting
+        if (this.touchControls.shootPressed) {
+            this.shoot();
         }
 
         // Keep player in bounds
@@ -421,7 +569,7 @@ class SpaceInvadersGame {
             this.player.powerupTime--;
             if (this.player.powerupTime <= 0) {
                 this.player.powerup = null;
-                this.shootCooldown = 200; // Reset to normal
+                this.shootCooldown = this.baseShootCooldown; // FIXED: Reset to base cooldown
             }
         }
     }
@@ -555,8 +703,12 @@ class SpaceInvadersGame {
         // Check if all enemies are destroyed
         if (this.enemies.length === 0) {
             this.level++;
+            
+            // FIXED: Calculate speeds from base values, not accumulating
+            this.enemySpeed = this.baseEnemySpeed + (this.level * 0.2);
+            this.enemyBulletSpeed = this.baseEnemyBulletSpeed + (this.level * 0.1);
+            
             this.createEnemies();
-            this.enemySpeed += 0.2;
         }
 
         // Check if enemies reached the bottom
@@ -573,7 +725,6 @@ class SpaceInvadersGame {
         
         if (this.score > this.highScore) {
             this.highScore = this.score;
-            localStorage.setItem('spaceInvadersHighScore', this.highScore);
         }
         
         this.showOverlay('Game Over', `Final Score: ${this.score}<br>Press Enter to restart`);
@@ -657,7 +808,6 @@ class SpaceInvadersGame {
         }
     }
 
-
     renderBullets() {
         this.ctx.fillStyle = '#ffff90';
         for (let bullet of this.bullets) {
@@ -684,14 +834,12 @@ class SpaceInvadersGame {
             if (img && img.complete && img.naturalWidth > 0) {
                 this.ctx.drawImage(img, enemy.x, enemy.y, enemy.width, enemy.height);
             } else {
-                // fallback (so you can see SOMETHING even if images fail)
+                // fallback 
                 this.ctx.fillStyle = '#90ff60';
                 this.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
             }
         }
     }
-
-
 
     renderEnemyBullets() {
         this.ctx.fillStyle = '#ff6060';
@@ -721,7 +869,6 @@ class SpaceInvadersGame {
             }
         }
     }
-
 
     renderParticles() {
         for (let particle of this.particles) {
@@ -826,12 +973,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputManager = new InputManager();
     inputManager.init(game.canvas);
     particleSystem.createStarfield();
+    
+    // FIXED: Audio integration with proper controls
+    let audioInitialized = false;
+    
+    const initializeAudio = () => {
+        if (!audioInitialized) {
+            audio.playBackgroundMusic();
+            audioInitialized = true;
+        }
+    };
+
     // Override shoot method to play shoot sound
     const originalShoot = game.shoot.bind(game);
     game.shoot = function() {
         const now = Date.now();
         if (now - this.lastShot > this.shootCooldown && this.player) {
-            audio.playShoot(); // 🔊 play shoot sound
+            initializeAudio();
+            audio.playShoot();
         }
         originalShoot();
     };
@@ -839,32 +998,27 @@ document.addEventListener('DOMContentLoaded', () => {
     // Override createExplosion to play explosion sound
     const originalExplosion = game.createExplosion.bind(game);
     game.createExplosion = function(x, y, color) {
-        audio.playExplosion(); // 🔊 play explosion sound
+        audio.playExplosion();
         originalExplosion(x, y, color);
     };
 
     // Override applyPowerup to play powerup sound
     const originalApplyPowerup = game.applyPowerup.bind(game);
     game.applyPowerup = function(type) {
-        audio.playPowerup(); // 🔊 play powerup sound
+        audio.playPowerup();
         originalApplyPowerup(type);
     };
 
     // Start button triggers music
-    document.getElementById('startBtn').addEventListener('click', () => {
-        audio.playBackgroundMusic();
-    });
-    document.getElementById('startGameBtn').addEventListener('click', () => {
-        audio.playBackgroundMusic();
-    });
-
-    // Start background music on load (will only play after user interaction in most browsers, including Brave)
-    audio.playBackgroundMusic();
+    document.getElementById('startBtn').addEventListener('click', initializeAudio);
+    document.getElementById('startGameBtn').addEventListener('click', initializeAudio);
 });
 
+// FIXED: AudioManager with better control
 class AudioManager {
     constructor() {
         this.enabled = true;
+        this.musicPlaying = false;
 
         // Link to HTML audio elements
         this.shootSound = document.getElementById('shootSound');
@@ -874,13 +1028,18 @@ class AudioManager {
 
         if (this.backgroundMusic) {
             this.backgroundMusic.loop = true;
+            this.backgroundMusic.volume = 0.3; // Lower volume for background music
         }
+
+        // Set volumes for sound effects
+        if (this.shootSound) this.shootSound.volume = 0.2;
+        if (this.explosionSound) this.explosionSound.volume = 0.3;
+        if (this.powerupSound) this.powerupSound.volume = 0.4;
     }
 
     playShoot() {
         if (this.enabled && this.shootSound) {
             this.shootSound.currentTime = 0;
-            this.shootSound.volume = 0.4;
             this.shootSound.play().catch(() => {});
         }
     }
@@ -888,7 +1047,6 @@ class AudioManager {
     playExplosion() {
         if (this.enabled && this.explosionSound) {
             this.explosionSound.currentTime = 0;
-            this.explosionSound.volume = 0.4;
             this.explosionSound.play().catch(() => {});
         }
     }
@@ -896,23 +1054,24 @@ class AudioManager {
     playPowerup() {
         if (this.enabled && this.powerupSound) {
             this.powerupSound.currentTime = 0;
-            this.powerupSound.volume = 0.4;
             this.powerupSound.play().catch(() => {});
         }
     }
 
     playBackgroundMusic() {
-        if (this.enabled && this.backgroundMusic) {
+        if (this.enabled && this.backgroundMusic && !this.musicPlaying) {
             this.backgroundMusic.play().catch(() => {
                 console.log("Background music will start after user input");
             });
+            this.musicPlaying = true;
         }
     }
 
     stopBackgroundMusic() {
-        if (this.backgroundMusic) {
+        if (this.backgroundMusic && this.musicPlaying) {
             this.backgroundMusic.pause();
             this.backgroundMusic.currentTime = 0;
+            this.musicPlaying = false;
         }
     }
 
@@ -920,11 +1079,13 @@ class AudioManager {
         this.enabled = !this.enabled;
         if (!this.enabled) {
             this.stopBackgroundMusic();
+        } else if (!this.musicPlaying) {
+            this.playBackgroundMusic();
         }
     }
 }
 
-// to add particle effects manager
+// Particle effects manager
 class ParticleSystem {
     constructor(canvas, ctx) {
         this.canvas = canvas;
@@ -968,7 +1129,7 @@ class ParticleSystem {
     }
 }
 
-// For input manager for better control
+// Input manager for better control
 class InputManager {
     constructor() {
         this.keys = {};

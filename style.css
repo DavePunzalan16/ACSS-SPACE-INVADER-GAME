@@ -1145,3 +1145,298 @@ html {
     color: #ffd43b !important;
     border-color: rgba(255, 212, 59, 0.5) !important;
 }
+/* ===== MOBILE CONTROLS ===== */
+.mobile-controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    pointer-events: none;
+    z-index: 50;
+}
+
+/* Only show mobile controls on touch devices */
+@media (pointer: coarse) {
+    .mobile-controls {
+        display: flex;
+    }
+}
+
+@media (pointer: fine) {
+    .mobile-controls {
+        display: none;
+    }
+}
+
+/* Analog Stick Container */
+.mobile-analog {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    pointer-events: auto;
+}
+
+.analog-stick {
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle, 
+        rgba(144, 255, 144, 0.1) 0%, 
+        rgba(144, 255, 144, 0.3) 100%);
+    border: 3px solid rgba(144, 255, 144, 0.5);
+    border-radius: 50%;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.analog-stick:active {
+    transform: scale(1.1);
+    border-color: rgba(144, 255, 144, 0.8);
+    box-shadow: 0 0 20px rgba(144, 255, 144, 0.4);
+}
+
+.analog-knob {
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(135deg, 
+        rgba(144, 255, 144, 0.8) 0%, 
+        rgba(96, 200, 96, 0.9) 100%);
+    border: 2px solid rgba(144, 255, 144, 0.6);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.1s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Shoot Button */
+.mobile-shoot-btn {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, 
+        rgba(255, 107, 107, 0.8) 0%, 
+        rgba(255, 69, 58, 0.9) 100%);
+    border: 3px solid rgba(255, 107, 107, 0.6);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    user-select: none;
+    pointer-events: auto;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.mobile-shoot-btn:active,
+.mobile-shoot-btn.active {
+    transform: scale(1.1);
+    background: linear-gradient(135deg, 
+        rgba(255, 69, 58, 1) 0%, 
+        rgba(255, 45, 32, 1) 100%);
+    border-color: rgba(255, 107, 107, 0.8);
+    box-shadow: 0 0 25px rgba(255, 107, 107, 0.6);
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 768px) and (orientation: landscape) {
+    .mobile-controls {
+        height: 100px;
+        padding: 15px 25px;
+    }
+    
+    .mobile-analog,
+    .analog-stick,
+    .mobile-shoot-btn {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .analog-knob {
+        width: 25px;
+        height: 25px;
+    }
+    
+    .mobile-shoot-btn {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 480px) {
+    .mobile-controls {
+        height: 110px;
+        padding: 15px;
+    }
+    
+    .mobile-analog,
+    .analog-stick,
+    .mobile-shoot-btn {
+        width: 75px;
+        height: 75px;
+    }
+    
+    .analog-knob {
+        width: 28px;
+        height: 28px;
+    }
+}
+
+/* iPhone 14 Pro specific adjustments */
+@media (max-width: 430px) and (max-height: 932px) {
+    .mobile-controls {
+        bottom: 10px;
+        padding: 10px 20px;
+    }
+}
+
+/* Landscape mode for small screens */
+@media (max-height: 500px) and (orientation: landscape) {
+    .mobile-controls {
+        height: 80px;
+        padding: 10px 20px;
+    }
+    
+    .mobile-analog,
+    .analog-stick,
+    .mobile-shoot-btn {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .analog-knob {
+        width: 22px;
+        height: 22px;
+    }
+    
+    .mobile-shoot-btn {
+        font-size: 10px;
+    }
+}
+
+/* Visual feedback animations */
+@keyframes analogPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+}
+
+@keyframes shootPulse {
+    0%, 100% {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(255, 107, 107, 0.4);
+    }
+}
+
+.analog-stick:hover {
+    animation: analogPulse 1.5s infinite ease-in-out;
+}
+
+.mobile-shoot-btn:hover {
+    animation: shootPulse 1s infinite ease-in-out;
+}
+
+/* Accessibility improvements for mobile */
+@media (prefers-reduced-motion: reduce) {
+    .mobile-controls * {
+        animation: none !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .analog-stick {
+        border-color: #fff;
+        background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .analog-knob {
+        background: #fff;
+        border-color: #000;
+    }
+    
+    .mobile-shoot-btn {
+        background: #ff0000;
+        border-color: #fff;
+        color: #fff;
+    }
+}
+
+/* Touch target improvements */
+.mobile-controls button,
+.mobile-controls .analog-stick {
+    min-width: 44px;
+    min-height: 44px;
+    touch-action: manipulation;
+}
+
+/* Prevent text selection on mobile controls */
+.mobile-controls * {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Haptic feedback simulation with visual cues */
+.analog-stick:active .analog-knob {
+    background: linear-gradient(135deg, 
+        rgba(200, 255, 200, 0.9) 0%, 
+        rgba(144, 255, 144, 1) 100%);
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.mobile-shoot-btn:active::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    animation: ripple 0.3s ease-out;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0.8);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.2);
+        opacity: 0;
+    }
+}
+
+/* Force hardware acceleration for smooth performance */
+.mobile-controls,
+.analog-stick,
+.analog-knob,
+.mobile-shoot-btn {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
